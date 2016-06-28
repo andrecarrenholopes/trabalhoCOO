@@ -1,4 +1,4 @@
 
-public class Enemy1 {
-
+public class Enemy1 implements EnemyATN {
+	
 }

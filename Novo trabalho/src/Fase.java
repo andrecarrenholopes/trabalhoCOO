@@ -1,15 +1,20 @@
-import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Fase {
 	
 	private int nroFase;
-	static ArrayList<Enemy> Enemys;
+	static SortedSet <Enemy> Enemys = new TreeSet <Enemy> ();
 	
 	public Fase(int nroFase) {
 		this.nroFase = nroFase;
 	}
 	
-	public static void add(Enemy enemy) {
+	public void adiciona(Enemy enemy) {
 		Enemys.add(enemy);
+	}
+	
+	public int getNroFase() {
+		return nroFase;
 	}
 }

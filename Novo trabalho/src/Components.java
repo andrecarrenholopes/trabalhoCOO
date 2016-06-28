@@ -1,5 +1,5 @@
 
-public class Components {
+public abstract class Components {
 	
 	//Constantes que representam os estados possiveis dos componentes
     public static final int INACTIVE = 0;
@@ -12,7 +12,7 @@ public class Components {
     private double coordY;
     private double radius;
 
-    //Construtor
+    //Construtores
     public Components(int state, double coordX, double coordY, double radius) {
         this.state = state;
         this.coordX = coordX;
@@ -20,12 +20,15 @@ public class Components {
         this.radius = radius;
     }
     
-    
-    //Getters e Setters
     public Components(){
         this(0,0,0,0);
     }
     
+    public abstract void draw(long delta);
+    
+    public abstract void behavior(long delta);
+
+    //Getters e Setters
     public int getState() {
         return state;
     }

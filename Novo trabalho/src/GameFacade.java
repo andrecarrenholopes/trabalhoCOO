@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class GameFacade {
 	
 	static ArrayList <Fase> arrayFases;
+	private static long nextFase;
+	private static long nextEnemy;
 	static Player player;
     static ArrayList<Enemy> arrayEnemy1;
     private static long nextEnemy1;
@@ -62,7 +64,7 @@ public class GameFacade {
             GameFacade.update(delta);
             
             GameFacade.throwEnemies();
-            GameFacade.throwPowerUp();
+            //GameFacade.throwPowerUp();
             
             //Para a execucao do jogo quando o "esc" for pressionado
             if(GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) running = false;
@@ -75,10 +77,11 @@ public class GameFacade {
         System.exit(0);
 	}
 	
-	public static Fase initFase(String arq_Fase, int c) {
+	public static Fase initFase(String arq_Fase, int c) throws IOException {
 		Fase novaFase = new Fase(c);
 		
 		//abre o arquivo de configuracao da fase
+		
 		FileReader entrada = new FileReader(arq_Fase);
 		BufferedReader lerEntrada = new BufferedReader(entrada);
 		String linha = lerEntrada.readLine();
@@ -88,24 +91,31 @@ public class GameFacade {
 			String [] config = linha.split(" ");
 			if(config[0]=="INIMIGO") {
 				ArrayList<Projectile> ps = new ArrayList<Projectile>();
+				Enemy e;
 				if(config[1]=="1") {
-					Enemy e = new Enemy(0, config[2], 0, 0, 0, 0, 0, new Enemy1(), ps, Components.INACTIVE, config[3], config[4], 11);
+					e = new Enemy(0, Integer.parseInt(config[2]), 0, 0, 0, 0, 0, new Enemy1(), ps, Components.INACTIVE, Integer.parseInt(config[3]), Integer.parseInt(config[4]), 11);
 				}
 				else {
-					Enemy e = new Enemy(0, config[2], 0, 0, 0, 0, 0, new Enemy2(), ps, Components.INACTIVE, config[3], config[4], 11);
+					e = new Enemy(0, Integer.parseInt(config[2]), 0, 0, 0, 0, 0, new Enemy1(), ps, Components.INACTIVE, Integer.parseInt(config[3]), Integer.parseInt(config[4]), 11);
 				}
-				novaFase.add(e);
+				novaFase.adiciona(e);
 			}
-			else {
+			else {//caso seja um CHEFE
 				
 			}
 			//System.out.println("config: " + config[0]);
 			//System.out.println(linha);
 			
 			//le a proxima linha
-			linha = lerEntrada.readLine();
+			try {
+				linha = lerEntrada.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		//fecha o arquivo e retorna o objeto fase
+		
 		entrada.close();
 		
 		return novaFase; 
@@ -209,4 +219,36 @@ public class GameFacade {
             }
         }
     }
+    
+    //Metodo que desenha os inimigos e chama o metodo que desenha o Background
+    public static void paint(long delta){
+        player.draw(delta);
+        //powerUp.draw(delta);
+        for (Components enemy : getAllEnemies()) {
+            enemy.draw(delta);
+        }
+        drawBackGround(delta);
+   
+    }
+    
+    
+  //Metodo que desenha o Background
+    public static void drawBackGround(long delta){
+        for (Background b : backg1) {
+            b.draw(delta);
+        }
+        for (Background b : backg2) {
+            b.draw(delta);
+        }
+    }
+    
+    /* Espera, sem fazer nada, até que o instante de tempo atual seja */
+	/* maior ou igual ao instante especificado no parâmetro "time.    */
+	
+	public static void busyWait(long time){
+		
+		while(System.currentTimeMillis() < time) Thread.yield();
+	}
 }
+
+
