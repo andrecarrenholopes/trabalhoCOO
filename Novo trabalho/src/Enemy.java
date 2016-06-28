@@ -3,7 +3,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 //super classe dos inimigos
-public class Enemy extends Components {
+public class Enemy extends Components implements Comparable <Enemy> {
 
      //Atributos comuns aos inimigos
     private double veloc;
@@ -23,7 +23,8 @@ public class Enemy extends Components {
         super(state, coordX, coordY, radius);
     }
     
-    public Enemy(double veloc, int quando, double angle, double velocRot, double explosionStart, double explosionEnd, long nextShot, EnemyATN action, ArrayList<Projectile> projectiles,int state, double coordX, double coordY, double radius) {
+    public Enemy(double veloc, int quando, double angle, double velocRot, double explosionStart, double explosionEnd, long nextShot,
+    		EnemyATN action, ArrayList<Projectile> projectiles,int state, double coordX, double coordY, double radius) {
         super(state, coordX, coordY, radius);
         this.veloc = veloc;
         this.quando = quando;
@@ -41,6 +42,7 @@ public class Enemy extends Components {
     }
     
     //Comportamento de acordo com a acao definida pelo EnemyATN e de seus Projeteis
+    
     @Override
     public void behavior(long delta) {
         action.behavior(this, delta);
@@ -90,6 +92,16 @@ public class Enemy extends Components {
     void addProjectile(Projectile p) {
         projectiles.add(p);
     }
+    
+    @Override
+	public int compareTo(Enemy o) {
+		return Integer.compare(this.quando, o.quando);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return (this.quando==((Enemy)o).quando);
+	}
     
     //Getters e Setters do inimigo
     public EnemyATN getAction() {
